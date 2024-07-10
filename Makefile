@@ -43,6 +43,8 @@ CFLAGS += -DUSE_LIBCAMERA $(shell pkg-config --cflags libcamera)
 LDLIBS += $(shell pkg-config --libs libcamera)
 endif
 
+LDFlags += -ljpeg
+
 ifeq (1,$(USE_RTSP))
 CFLAGS += -DUSE_RTSP $(shell pkg-config --cflags live555)
 LDLIBS += $(shell pkg-config --libs live555)

@@ -7,6 +7,20 @@
 #include "output/webrtc/webrtc.h"
 #include "output/output.h"
 
+typedef enum {
+  MJPEG_ENCODER_AUTO = 0,
+  MJPEG_ENCODER_HARDWARE,
+  MJPEG_ENCODER_SOFTWARE
+} mjpeg_encoder_t;
+
+option_value_t mjpeg_encoder_values[] = {
+  { "auto", MJPEG_ENCODER_AUTO },
+  { "hardware", MJPEG_ENCODER_HARDWARE },
+  { "software", MJPEG_ENCODER_SOFTWARE },
+  {}
+};
+
+
 camera_options_t camera_options = {
   .path = "",
   .width = 1920,
@@ -14,6 +28,7 @@ camera_options_t camera_options = {
   .format = 0,
   .nbufs = 3,
   .fps = 30,
+  .mjpeg_encoder = MJPEG_ENCODER_AUTO,
   .allow_dma = true,
   .high_res_factor = 0.0,
   .low_res_factor = 0.0,
@@ -124,6 +139,7 @@ option_t all_options[] = {
   DEFINE_OPTION_DEFAULT(camera, video.disabled, bool, "1", "Disable video."),
   DEFINE_OPTION_PTR(camera, video.options, list, "Set the H264 encoding options. List all available options with `-camera-list_options`."),
   DEFINE_OPTION(camera, video.height, uint, "Override the video height and maintain aspect ratio."),
+  DEFINE_OPTION_VALUES(camera, mjpeg_encoder, mjpeg_encoder_values, "Select MJPEG encoder (auto, hardware, software)."),
 
   DEFINE_OPTION_DEFAULT(camera, list_options, bool, "1", "List all available options and exit."),
 

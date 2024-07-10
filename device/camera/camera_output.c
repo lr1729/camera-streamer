@@ -14,8 +14,7 @@
 
 #define MATCH_ALIGN_SIZE 32
 
-static bool camera_output_matches_capture(buffer_list_t *capture, unsigned target_height, unsigned format)
-{
+static bool camera_output_matches_capture(buffer_list_t *capture, unsigned target_height, unsigned format) {
   if (target_height && abs((int)capture->fmt.height - (int)target_height) > MATCH_ALIGN_SIZE) {
     return false;
   }
@@ -27,8 +26,7 @@ static bool camera_output_matches_capture(buffer_list_t *capture, unsigned targe
   return true;
 }
 
-static buffer_list_t *camera_find_capture(camera_t *camera, unsigned target_height, unsigned format)
-{
+static buffer_list_t *camera_find_capture(camera_t *camera, unsigned target_height, unsigned format) {
   for (int i = 0; i < MAX_DEVICES; i++) {
     if (!camera->devices[i])
       continue;
@@ -46,8 +44,7 @@ static buffer_list_t *camera_find_capture(camera_t *camera, unsigned target_heig
   return NULL;
 }
 
-static buffer_list_t *camera_find_capture2(camera_t *camera, unsigned target_height, unsigned formats[])
-{
+static buffer_list_t *camera_find_capture2(camera_t *camera, unsigned target_height, unsigned formats[]) {
   for (int i = 0; formats[i]; i++) {
     buffer_list_t *capture = camera_find_capture(camera, target_height, formats[i]);
     if (capture) {
@@ -58,8 +55,7 @@ static buffer_list_t *camera_find_capture2(camera_t *camera, unsigned target_hei
   return NULL;
 }
 
-static unsigned rescalled_formats[] =
-{
+static unsigned rescalled_formats[] = {
   // best quality
   V4L2_PIX_FMT_YUYV,
 
@@ -76,8 +72,7 @@ static unsigned rescalled_formats[] =
 
 #define OUTPUT_RESCALLER_SIZE 32
 
-int camera_configure_output(camera_t *camera, buffer_list_t *camera_capture, const char *name, camera_output_options_t *options, unsigned formats[], link_callbacks_t callbacks, device_t **device)
-{
+int camera_configure_output(camera_t *camera, buffer_list_t *camera_capture, const char *name, camera_output_options_t *options, unsigned formats[], link_callbacks_t callbacks, device_t **device) {
   buffer_format_t selected_format = {0};
   buffer_format_t rescalled_format = {0};
 
@@ -148,9 +143,21 @@ int camera_configure_output(camera_t *camera, buffer_list_t *camera_capture, con
   unsigned chosen_format = 0;
   device_info_t *device_info = device_list_find_m2m_formats(camera->device_list, src_capture->fmt.format, formats, &chosen_format);
 
-  if (!device_info) {
-    LOG_INFO(camera, "Cannot find encoder to convert from '%s'", fourcc_to_string(src_capture->fmt.format).buf);
-    return -1;
+  // Check if software MJPEG encoder is forced or no hardware encoder is found
+  if (camera->options.mjpeg_encoder == MJPEG_ENCODER_SOFTWARE || !device_info) {
+    *device = device_mjpeg_sw_open(name, NULL); // Create software encoder
+
+    buffer_list_t *output = device_open_buffer_list_output(*device, src_capture);
+    buffer_list_t *capture = device_open_buffer_list_capture2(*device, NULL, output, V4L2_PIX_FMT_MJPEG, true);
+
+    if (!capture) {
+      return -1;
+    }
+
+    camera_capture_add_output(camera, src_capture, output);
+    camera_capture_add_callbacks(camera, capture, callbacks);
+    camera_debug_capture(camera, capture);
+    return 0;
   }
 
   *device = device_v4l2_open(name, device_info->path);
