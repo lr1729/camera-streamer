@@ -116,7 +116,7 @@ int device_set_fps(device_t *dev, int desired_fps);
 int device_set_rotation(device_t *dev, bool vflip, bool hflip);
 int device_set_target_crop(device_t *dev, const buffer_rect_t *rect);
 int device_set_option_string(device_t *dev, const char *option, const char *value);
-void device_set_option_list(device_t *dev, const char *option_list);
+int device_set_option_list(device_t *dev, const char *option_list);
 
 int device_output_enqueued(device_t *dev);
 int device_capture_enqueued(device_t *dev, int *max);
