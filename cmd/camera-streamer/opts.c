@@ -7,12 +7,6 @@
 #include "output/webrtc/webrtc.h"
 #include "output/output.h"
 
-typedef enum {
-  MJPEG_ENCODER_AUTO = 0,
-  MJPEG_ENCODER_HARDWARE,
-  MJPEG_ENCODER_SOFTWARE
-} mjpeg_encoder_t;
-
 option_value_t mjpeg_encoder_values[] = {
   { "auto", MJPEG_ENCODER_AUTO },
   { "hardware", MJPEG_ENCODER_HARDWARE },

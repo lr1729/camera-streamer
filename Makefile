@@ -7,7 +7,7 @@ GIT_VERSION ?= $(shell git describe --tags)
 GIT_REVISION ?= $(shell git rev-parse --short HEAD)
 
 CFLAGS := -Werror -Wall -g -I$(CURDIR) -D_GNU_SOURCE
-LDLIBS := -lpthread -lstdc++
+LDLIBS := -lpthread -lstdc++ -ljpeg
 
 # libdatachannel deprecations on bookworm
 # error: 'HMAC_Init_ex' is deprecated: Since OpenSSL 3.0
@@ -42,8 +42,6 @@ ifeq (1,$(USE_LIBCAMERA))
 CFLAGS += -DUSE_LIBCAMERA $(shell pkg-config --cflags libcamera)
 LDLIBS += $(shell pkg-config --libs libcamera)
 endif
-
-LDFlags += -ljpeg
 
 ifeq (1,$(USE_RTSP))
 CFLAGS += -DUSE_RTSP $(shell pkg-config --cflags live555)

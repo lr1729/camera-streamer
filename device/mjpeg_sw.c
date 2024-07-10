@@ -171,3 +171,4 @@ void mjpeg_sw_buffer_list_close(buffer_list_t *buf_list) {
 int mjpeg_sw_buffer_list_set_stream(buffer_list_t *buf_list, bool do_on) {
   return 0;
 }
+

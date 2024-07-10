@@ -2,7 +2,7 @@
 
 #include "device/links.h"
 #include "device/device.h"
-#include "util/opts/opts.h"
+#include "util/opts/opts.h" // Include opts.h here
 
 #define MAX_DEVICES 20
 #define MAX_RESCALLERS 4
@@ -21,18 +21,10 @@ typedef enum {
   CAMERA_SOFTWARE_MJPEG
 } camera_type_t;
 
-
-typedef enum {
-  MJPEG_ENCODER_AUTO = 0,
-  MJPEG_ENCODER_HARDWARE,
-  MJPEG_ENCODER_SOFTWARE
-} mjpeg_encoder_t; // Forward declare mjpeg_encoder_t
-
 typedef struct camera_output_options_s {
   bool disabled;
   unsigned height;
   char options[CAMERA_OPTIONS_LENGTH];
-  mjpeg_encoder_t mjpeg_encoder;
 } camera_output_options_t;
 
 typedef struct camera_options_s {
@@ -65,7 +57,7 @@ typedef struct camera_options_s {
   camera_output_options_t snapshot;
   camera_output_options_t stream;
   camera_output_options_t video;
-   mjpeg_encoder_t mjpeg_encoder;
+  mjpeg_encoder_t mjpeg_encoder; // Single instance of mjpeg_encoder_t
 } camera_options_t;
 
 typedef struct camera_s {

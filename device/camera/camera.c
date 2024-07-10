@@ -7,6 +7,7 @@
 #include "device/links.h"
 #include "util/opts/log.h"
 #include "util/opts/fourcc.h"
+#include "util/opts/opts.h" // Add this includ
 
 camera_t *camera_open(camera_options_t *options)
 {

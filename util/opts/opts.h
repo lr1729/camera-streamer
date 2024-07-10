@@ -7,6 +7,12 @@ typedef struct option_value_s {
   unsigned value;
 } option_value_t;
 
+typedef enum {
+  MJPEG_ENCODER_AUTO = 0,
+  MJPEG_ENCODER_HARDWARE,
+  MJPEG_ENCODER_SOFTWARE
+} mjpeg_encoder_t; // Move the enum definition here
+
 typedef struct options_s {
   const char *name;
   char *value_string;
