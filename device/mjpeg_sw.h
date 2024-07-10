@@ -3,10 +3,13 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <unistd.h>
+#include <stdio.h>
+#include "jpeglib.h"
 
 typedef struct buffer_s buffer_t;
 typedef struct buffer_list_s buffer_list_t;
 typedef struct device_s device_t;
+device_t *device_mjpeg_sw_open(const char *name, const char *path);
 struct pollfd;
 
 typedef struct device_mjpeg_sw_s {

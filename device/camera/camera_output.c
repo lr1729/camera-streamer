@@ -11,6 +11,8 @@
 #include "util/http/http.h"
 #include "output/rtsp/rtsp.h"
 #include "output/output.h"
+#include "device/mjpeg_sw.h" // Add this line
+#include "util/opts/opts.h" // Include opts.h instead of opts.c
 
 #define MATCH_ALIGN_SIZE 32
 

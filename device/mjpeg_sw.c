@@ -1,4 +1,6 @@
 #include "mjpeg_sw.h"
+#include "device/buffer_list.h"
+#include "device/buffer.h" // Add this line
 #include "device/device.h"
 #include "util/opts/log.h"
 #include "util/opts/fourcc.h"
@@ -70,7 +72,6 @@ void mjpeg_sw_buffer_close(buffer_t *buf) {
 
 int mjpeg_sw_buffer_enqueue(buffer_t *buf, const char *who) {
   buffer_list_t *buf_list = buf->buf_list;
-  device_t *dev = buf_list->dev;
   buffer_t *src_buf = buf->dma_source;
 
   if (!src_buf) {
@@ -81,6 +82,8 @@ int mjpeg_sw_buffer_enqueue(buffer_t *buf, const char *who) {
   buf->mjpeg_sw->cinfo.err = jpeg_std_error(&buf->mjpeg_sw->jerr);
   jpeg_create_compress(&buf->mjpeg_sw->cinfo);
   jpeg_mem_dest(&buf->mjpeg_sw->cinfo, &buf->mjpeg_sw->outbuffer, &buf->mjpeg_sw->outbuffer_size);
+
+  device_t *dev = buf_list->dev;
 
   buf->mjpeg_sw->cinfo.image_width = src_buf->buf_list->fmt.width;
   buf->mjpeg_sw->cinfo.image_height = src_buf->buf_list->fmt.height;

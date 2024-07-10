@@ -54,6 +54,7 @@ typedef struct device_s {
     struct device_v4l2_s *v4l2;
     struct device_dummy_s *dummy;
     struct device_libcamera_s *libcamera;
+    struct device_mjpeg_sw_s *mjpeg_sw;
   };
 
   bool paused;
