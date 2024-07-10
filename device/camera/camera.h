@@ -32,6 +32,7 @@ typedef struct camera_options_s {
   unsigned width, height, format;
   unsigned nbufs, fps;
   camera_type_t type;
+  mjpeg_encoder_t encoder; // Single instance of mjpeg_encoder_t
   bool allow_dma;
   float high_res_factor;
   float low_res_factor;
@@ -57,7 +58,6 @@ typedef struct camera_options_s {
   camera_output_options_t snapshot;
   camera_output_options_t stream;
   camera_output_options_t video;
-  mjpeg_encoder_t mjpeg_encoder; // Single instance of mjpeg_encoder_t
 } camera_options_t;
 
 typedef struct camera_s {

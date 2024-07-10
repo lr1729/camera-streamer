@@ -146,7 +146,7 @@ int camera_configure_output(camera_t *camera, buffer_list_t *camera_capture, con
   device_info_t *device_info = device_list_find_m2m_formats(camera->device_list, src_capture->fmt.format, formats, &chosen_format);
 
   // Check if software MJPEG encoder is forced or no hardware encoder is found
-  if (camera->options.mjpeg_encoder == MJPEG_ENCODER_SOFTWARE || !device_info) {
+  if (camera->options.encoder == MJPEG_ENCODER_SOFTWARE || !device_info) {
     *device = device_mjpeg_sw_open(name, NULL); // Create software encoder
 
     buffer_list_t *output = device_open_buffer_list_output(*device, src_capture);

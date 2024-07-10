@@ -5,6 +5,7 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <limits.h>
+#include <errno.h>
 
 #define OPT_LENGTH 30
 
@@ -20,11 +21,15 @@ const char *opt_value_to_string(const option_value_t *values, int value, const c
 
 int opt_string_to_value(const option_value_t *values, const char *name, int def)
 {
+  fprintf(stderr, "DEBUG: opt_string_to_value: name='%s', def=%d\n", name, def);
   for (int i = 0; values[i].name; i++) {
+    fprintf(stderr, "DEBUG: opt_string_to_value: comparing to '%s'\n", values[i].name);
     if (!strcmp(values[i].name, name)) {
+      fprintf(stderr, "DEBUG: opt_string_to_value: found match, returning %d\n", values[i].value);
       return values[i].value;
     }
   }
+  fprintf(stderr, "DEBUG: opt_string_to_value: no match found, returning def=%d\n", def);
   return def;
 }
 
@@ -117,6 +122,8 @@ static int parse_opt(option_t *options, const char *key, int dash)
   option_t *option = NULL;
   const char *value = strchr(key, '=');
 
+  fprintf(stderr, "DEBUG: parse_opt: key='%s', value='%s', option='%s'\n", key, value, option ? option->name : NULL);
+
   for (int i = 0; options[i].name; i++) {
     if (value) {
       if (!strncmp(key, options[i].name, value - key)) {
@@ -142,9 +149,11 @@ static int parse_opt(option_t *options, const char *key, int dash)
 
   LOG_DEBUG(NULL, "Parsing '%s'. Got value='%s', and option='%s'", key, value, option ? option->name : NULL);
 
+  fprintf(stderr, "DEBUG: parse_opt: key='%s', value='%s', option='%s'\n", key, value, option ? option->name : NULL);
   if (!option || !value) {
     return -EINVAL;
   }
+
 
   int ret = 0;
   if (option->value_list) {
@@ -159,7 +168,9 @@ static int parse_opt(option_t *options, const char *key, int dash)
   } else if (option->value_string) {
     ret = sscanf(value, option->format, option->value_string);
   } else if (option->value_mapping) {
+    fprintf(stderr, "DEBUG: parse_opt: option has value mapping\n");
     int ret = opt_string_to_value(option->value_mapping, value, -1);
+    fprintf(stderr, "DEBUG: parse_opt: opt_string_to_value returned %d\n", ret);
     if (ret != -1) {
       *option->value_uint = ret;
       return 1;
